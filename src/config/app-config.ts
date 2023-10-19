@@ -8,4 +8,7 @@ export const AppConfig = () => ({
   dbName: process.env.DB_NAME ?? 'AnyList',
   dbUsername: process.env.DB_USERNAME,
   dbPassword: process.env.DB_PASSWORD,
+
+  // App
+  jwtSecret: process.env.JWT_SECRET,
 });

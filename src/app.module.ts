@@ -8,6 +8,8 @@ import { join } from 'path';
 import { AppConfig } from './config/app-config';
 import { JoiValidationSchema } from './config/joi-validation';
 import { ItemsModule } from './items/items.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { ItemsModule } from './items/items.module';
       synchronize: process.env.NODE_ENV !== 'prod',
     }),
     ItemsModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

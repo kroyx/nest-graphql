@@ -9,4 +9,5 @@ export const JoiValidationSchema = Joi.object({
   DB_NAME: Joi.string().default('AnyList'),
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.required(),
+  JWT_SECRET: Joi.string().required(),
 });
