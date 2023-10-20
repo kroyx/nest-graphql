@@ -19,3 +19,4 @@ docker compose up -d
 npm run start:dev
 ```
 6. Acceder a [Apollo Sandbox](http://localhost:3000/graphql)
+7. Ejecutar la mutation ``executeSeed`` para cargar la base de datos.

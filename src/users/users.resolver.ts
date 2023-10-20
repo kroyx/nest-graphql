@@ -12,6 +12,8 @@ import {
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/enums/roles.enum';
 import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
+import { PaginationArgs, SearchArgs } from '../common/dto/args';
+import { Item } from '../items/entities';
 import { ItemsService } from '../items/items.service';
 import { UpdateUserInput } from './dto';
 import { RolesArgs } from './dto/args/roles.args';
@@ -64,5 +66,15 @@ export class UsersResolver {
     @Parent() user: User,
   ): Promise<number> {
     return await this.itemsService.getItemsCount(user);
+  }
+
+  @ResolveField(() => [Item], { name: 'items' })
+  async getItemsByUser(
+    @CurrentUser([Roles.ADMIN]) adminUser: User,
+    @Parent() user: User,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ): Promise<Item[]> {
+    return this.itemsService.findAll(user, paginationArgs, searchArgs);
   }
 }

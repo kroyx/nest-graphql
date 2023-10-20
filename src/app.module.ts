@@ -11,6 +11,8 @@ import { AppConfig } from './config/app-config';
 import { JoiValidationSchema } from './config/joi-validation';
 import { ItemsModule } from './items/items.module';
 import { UsersModule } from './users/users.module';
+import { SeedModule } from './seed/seed.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { UsersModule } from './users/users.module';
     ItemsModule,
     UsersModule,
     AuthModule,
+    SeedModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

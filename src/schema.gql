@@ -9,8 +9,8 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
-  items: [Item!]
   itemCount: Int!
+  items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
 }
 
 type Item {
@@ -26,7 +26,7 @@ type AuthResponseType {
 }
 
 type Query {
-  items: [Item!]!
+  items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   item(id: String!): Item!
   users(roles: [Roles!] = []): [User!]!
   user(id: ID!): User!
@@ -47,6 +47,9 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   signUp(signUpInput: SignupInput!): AuthResponseType!
   signIn(signInInput: SigninInput!): AuthResponseType!
+
+  """Ejecuta la construcción de la base de datos"""
+  executeSeed: Boolean!
 }
 
 input CreateItemInput {
