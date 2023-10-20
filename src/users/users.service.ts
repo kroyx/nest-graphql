@@ -7,8 +7,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { EntityNotFoundError, QueryFailedError, Repository } from 'typeorm';
+import {
+  ArrayOverlap,
+  EntityNotFoundError,
+  QueryFailedError,
+  Repository,
+} from 'typeorm';
 import { SignupInput } from '../auth/dto';
+import { Roles } from '../auth/enums/roles.enum';
+import { UpdateUserInput } from './dto';
 import { User } from './entities';
 
 @Injectable()
@@ -20,8 +27,22 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<User[]> {
-    return [];
+  async findAll(roles: Roles[]): Promise<User[]> {
+    if (!roles || roles.length === 0) {
+      return this.userRepository.find({
+        relations: { lastUpdateBy: true },
+      });
+    }
+
+    // return await this.userRepository.findBy({
+    //   roles: ArrayOverlap(roles),
+    // });
+    return await this.userRepository.find({
+      where: {
+        roles: ArrayOverlap(roles),
+      },
+      relations: { lastUpdateBy: true },
+    });
   }
 
   async findOne(id: string): Promise<User> {
@@ -44,8 +65,27 @@ export class UsersService {
     }
   }
 
-  async block(id: string): Promise<User> {
-    throw new Error('block method not implemented');
+  async updateUser(
+    updateUserInput: UpdateUserInput,
+    updatedByUser: User,
+  ): Promise<User> {
+    const { id, password } = updateUserInput;
+
+    await this.findOne(id);
+
+    if (password) {
+      updateUserInput.password = bcrypt.hashSync(password, 10);
+    }
+    const user = await this.userRepository.preload(updateUserInput);
+    user.lastUpdateBy = updatedByUser;
+    return await this.userRepository.save(user);
+  }
+
+  async block(id: string, userUpdatedBy: User): Promise<User> {
+    const user = await this.findOne(id);
+    user.isActive = false;
+    user.lastUpdateBy = userUpdatedBy;
+    return await this.userRepository.save(user);
   }
 
   async createUser(signupInput: SignupInput): Promise<User> {
