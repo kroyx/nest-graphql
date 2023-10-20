@@ -4,8 +4,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Item } from '../../items/entities';
 
 @Entity({ name: 'users' })
 @ObjectType()
@@ -44,4 +46,8 @@ export class User {
   @JoinColumn({ name: 'lastUpdateBy' })
   @Field(() => User, { nullable: true })
   lastUpdateBy?: User;
+
+  @OneToMany(() => Item, (item) => item.user, { nullable: true, lazy: true })
+  @Field(() => [Item], { nullable: true })
+  items?: Item[];
 }
