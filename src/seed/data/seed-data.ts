@@ -2,6 +2,13 @@ import { Roles } from '../../auth/enums/roles.enum';
 
 export const SEED_USERS = [
   {
+    fullName: 'Kroyx Shirogane',
+    email: 'kroyx@gmail.com',
+    password: '123456',
+    roles: [Roles.USER, Roles.SUPER_USER, Roles.ADMIN],
+    isActive: true,
+  },
+  {
     fullName: 'Fernando Herrera',
     email: 'fernando@google.com',
     password: '123456',
@@ -22,6 +29,12 @@ export const SEED_USERS = [
     roles: [Roles.USER],
     isActive: false,
   },
+];
+
+export const SEED_LISTS = [
+  { name: 'Supermercado' },
+  { name: 'Diario' },
+  { name: 'Fin de semana' },
 ];
 
 export const SEED_ITEMS = [

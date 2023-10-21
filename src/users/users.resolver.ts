@@ -15,6 +15,8 @@ import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
 import { PaginationArgs, SearchArgs } from '../common/dto/args';
 import { Item } from '../items/entities';
 import { ItemsService } from '../items/items.service';
+import { List } from '../lists/entities/list.entity';
+import { ListsService } from '../lists/lists.service';
 import { UpdateUserInput } from './dto';
 import { RolesArgs } from './dto/args/roles.args';
 import { User } from './entities';
@@ -26,6 +28,7 @@ export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
     private readonly itemsService: ItemsService,
+    private readonly listsService: ListsService,
   ) {}
 
   @Query(() => [User], { name: 'users' })
@@ -65,7 +68,7 @@ export class UsersResolver {
     @CurrentUser([Roles.ADMIN]) adminUser: User,
     @Parent() user: User,
   ): Promise<number> {
-    return await this.itemsService.getItemsCount(user);
+    return this.itemsService.getItemsCount(user);
   }
 
   @ResolveField(() => [Item], { name: 'items' })
@@ -76,5 +79,23 @@ export class UsersResolver {
     @Args() searchArgs: SearchArgs,
   ): Promise<Item[]> {
     return this.itemsService.findAll(user, paginationArgs, searchArgs);
+  }
+
+  @ResolveField(() => Int, { name: 'listsCount' })
+  async listsCount(
+    @CurrentUser() adminUser: User,
+    @Parent() user: User,
+  ): Promise<number> {
+    return this.listsService.getListsCount(user);
+  }
+
+  @ResolveField(() => [List], { name: 'lists' })
+  async getListsByUser(
+    @CurrentUser([Roles.ADMIN]) adminUser: User,
+    @Parent() user: User,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ): Promise<List[]> {
+    return this.listsService.findAll(user, paginationArgs, searchArgs);
   }
 }
