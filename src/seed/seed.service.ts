@@ -45,11 +45,11 @@ export class SeedService {
   }
 
   async executeSeed(): Promise<boolean> {
-    // if (this.isProd) {
-    //   throw new ForbiddenException(
-    //     'It is not allowed to run seed on Production environment',
-    //   );
-    // }
+    if (this.isProd) {
+      throw new ForbiddenException(
+        'It is not allowed to run seed on Production environment',
+      );
+    }
 
     const usersData: CreateUserInput[] = [...SEED_USERS];
     const itemsData: CreateItemInput[] = [...SEED_ITEMS];
