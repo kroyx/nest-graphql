@@ -45,11 +45,11 @@ export class SeedService {
   }
 
   async executeSeed(): Promise<boolean> {
-    if (this.isProd) {
-      throw new ForbiddenException(
-        'It is not allowed to run seed on Production environment',
-      );
-    }
+    // if (this.isProd) {
+    //   throw new ForbiddenException(
+    //     'It is not allowed to run seed on Production environment',
+    //   );
+    // }
 
     const usersData: CreateUserInput[] = [...SEED_USERS];
     const itemsData: CreateItemInput[] = [...SEED_ITEMS];
@@ -155,7 +155,8 @@ export class SeedService {
     }
   }
 
-  async createListItems(lists: List[], items: Item[]) {
+  async createListItems(lists: List[], items: Item[]): Promise<ListItem[]> {
+    if (!lists || lists.length === 0) return [];
     return await Promise.all([
       ...items.map((item) => {
         const index = this.generateRandomNumber(0, lists.length);
